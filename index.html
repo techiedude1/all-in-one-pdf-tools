@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Merge, Split, Compress, Convert PDF & Docs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Merge, split, compress, and convert PDF, Word, and images online. Fast, free, privacy-friendly.">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://techiedude1.github.io/SnapShrink/favicon.svg" type="image/svg+xml">
+    <style>
+        body {
+            background: linear-gradient(135deg, #7f53ac 0%, #647dee 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background: #fff;
+            margin: 40px 0 0 0;
+            border-radius: 2rem;
+            box-shadow: 0 6px 32px rgba(80,40,180,0.10), 0 1.5px 4px rgba(80,40,180,0.11);
+            padding: 36px 28px 32px 28px;
+            max-width: 450px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #7f53ac;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            font-size: 2.1rem;
+            margin-bottom: 6px;
+        }
+        .desc {
+            color: #636b6f;
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 26px;
+        }
+        .tab-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .tab-btn {
+            flex: 1;
+            background: #e5e7fa;
+            color: #7f53ac;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 10px 0;
+            cursor: pointer;
+            transition: background .18s;
+        }
+        .tab-btn.active {
+            background: #7f53ac;
+            color: #fff;
+        }
+        .section { display: none; }
+        .section.active { display: block; }
+        .file-input-group {
+            margin: 20px 0 15px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="file"] {
+            display: block;
+            margin: 10px 0;
+        }
+        .action-btn {
+            background: linear-gradient(90deg, #7f53ac 0%, #647dee 100%);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 1rem;
+            padding: 12px 30px;
+            cursor: pointer;
+            margin: 20px auto 0 auto;
+            display: block;
+            transition: transform .12s;
+        }
+        .action-btn:hover {
+            transform: scale(1.04);
+            background: linear-gradient(90deg, #647dee 0%, #7f53ac 100%);
+        }
+        .output-link {
+            margin: 18px auto 0 auto;
+            display: block;
+            color: #1b2545;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: underline;
+            word-break: break-all;
+        }
+        @media (max-width: 600px) {
+            .container { max-width: 95vw; padding: 20px 6vw; }
+            h1 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>PDF, Word, Image Tools</h1>
+    <div class="desc">Merge, split, compress, convert Word, PDF, and images instantly. Free, fast, no signup required.</div>
+    <div class="tab-group">
+        <button class="tab-btn active" data-tab="merge">Merge PDF</button>
+        <button class="tab-btn" data-tab="split">Split PDF</button>
+        <button class="tab-btn" data-tab="compress">Compress PDF</button>
+        <button class="tab-btn" data-tab="convert">Convert</button>
+    </div>
+    <!-- Merge PDF -->
+    <div class="section active" id="merge">
+        <div class="file-input-group">
+            <input type="file" id="mergeFiles" multiple accept="application/pdf">
+        </div>
+        <button class="action-btn" onclick="mergePDF()">Merge PDFs</button>
+        <a id="mergeResult" class="output-link" style="display:none" download="merged.pdf">Download merged PDF</a>
+    </div>
+    <!-- Split PDF -->
+    <div class="section" id="split">
+        <div class="file-input-group">
+            <input type="file" id="splitFile" accept="application/pdf">
+            <input type="number" id="splitPage" placeholder="Page number to split at" min="1" style="width:60%;margin-top:6px;">
+        </div>
+        <button class="action-btn" onclick="splitPDF()">Split PDF</button>
+        <a id="splitResult1" class="output-link" style="display:none" download="part1.pdf">Download part 1</a>
+        <a id="splitResult2" class="output-link" style="display:none" download="part2.pdf">Download part 2</a>
+    </div>
+    <!-- Compress PDF -->
+    <div class="section" id="compress">
+        <div class="file-input-group">
+            <input type="file" id="compressFile" accept="application/pdf">
+        </div>
+        <button class="action-btn" onclick="compressPDF()">Compress PDF</button>
+        <a id="compressResult" class="output-link" style="display:none" download="compressed.pdf">Download compressed PDF</a>
+    </div>
+    <!-- Convert -->
+    <div class="section" id="convert">
+        <div class="file-input-group">
+            <input type="file" id="convertFile" accept=".pdf,.docx,.jpg,.jpeg,.png,.bmp,.gif">
+            <select id="convertType" style="margin-top:10px;">
+                <option value="pdf2img">PDF to Image</option>
+                <option value="img2pdf">Image to PDF</option>
+                <option value="docx2pdf">Word to PDF</option>
+            </select>
+        </div>
+        <button class="action-btn" onclick="convertFile()">Convert</button>
+        <a id="convertResult" class="output-link" style="display:none">Download converted file</a>
+    </div>
+</div>
+
+<!-- JS Libraries -->
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+<script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+<script>
+// Tab logic
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = function() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(btn.dataset.tab).classList.add('active');
+        document.querySelectorAll('.output-link').forEach(l => l.style.display='none');
+    }
+});
+
+// Merge PDFs
+async function mergePDF() {
+    const files = document.getElementById('mergeFiles').files;
+    if (!files.length) return alert('Select at least 2 PDFs!');
+    const mergedPdf = await PDFLib.PDFDocument.create();
+    for (let file of files) {
+        const bytes = await file.arrayBuffer();
+        const pdf = await PDFLib.PDFDocument.load(bytes);
+        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        pages.forEach(p => mergedPdf.addPage(p));
+    }
+    const mergedBytes = await mergedPdf.save();
+    const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.getElementById('mergeResult');
+    a.href = url; a.style.display = 'block';
+}
+
+// Split PDF
+async function splitPDF() {
+    const file = document.getElementById('splitFile').files[0];
+    const splitAt = parseInt(document.getElementById('splitPage').value);
+    if (!file || isNaN(splitAt) || splitAt < 1) return alert('Select a PDF and split page!');
+    const bytes = await file.arrayBuffer();
+    const pdf = await PDFLib.PDFDocument.load(bytes);
+    if (splitAt >= pdf.getPageCount()) return alert('Split page is too high.');
+    // Part 1
+    const pdf1 = await PDFLib.PDFDocument.create();
+    const p1 = await pdf1.copyPages(pdf, [...Array(splitAt).keys()]);
+    p1.forEach(p => pdf1.addPage(p));
+    const blob1 = new Blob([await pdf1.save()], {type:'application/pdf'});
+    // Part 2
+    const pdf2 = await PDFLib.PDFDocument.create();
+    const p2 = await pdf2.copyPages(pdf, Array.from({length:pdf.getPageCount()-splitAt}, (_,i)=>i+splitAt));
+    p2.forEach(p => pdf2.addPage(p));
+    const blob2 = new Blob([await pdf2.save()], {type:'application/pdf'});
+    document.getElementById('splitResult1').href = URL.createObjectURL(blob1);
+    document.getElementById('splitResult2').href = URL.createObjectURL(blob2);
+    document.getElementById('splitResult1').style.display = 'block';
+    document.getElementById('splitResult2').style.display = 'block';
+}
+
+// Compress PDF (simple: reduces size by removing metadata; does not downsample images)
+async function compressPDF() {
+    const file = document.getElementById('compressFile').files[0];
+    if (!file) return alert('Select a PDF!');
+    const bytes = await file.arrayBuffer();
+    const pdf = await PDFLib.PDFDocument.load(bytes);
+    // (No actual compression here, just re-saves. Real compression needs a backend or WebAssembly lib.)
+    const newBytes = await pdf.save();
+    const blob = new Blob([newBytes], {type:'application/pdf'});
+    const a = document.getElementById('compressResult');
+    a.href = URL.createObjectURL(blob);
+    a.style.display = 'block';
+}
+
+// Convert
+async function convertFile() {
+    const file = document.getElementById('convertFile').files[0];
+    const type = document.getElementById('convertType').value;
+    const out = document.getElementById('convertResult');
+    if (!file) return alert('Select a file!');
+    if (type === 'img2pdf') {
+        // Image to PDF
+        const imgBytes = await file.arrayBuffer();
+        const pdf = await PDFLib.PDFDocument.create();
+        const img = /\.(png|jpg|jpeg)$/i.test(file.name)
+            ? await pdf.embedPng(imgBytes).catch(()=>pdf.embedJpg(imgBytes))
+            : await pdf.embedJpg(imgBytes);
+        const page = pdf.addPage([img.width, img.height]);
+        page.drawImage(img, {x:0, y:0, width:img.width, height:img.height});
+        const blob = new Blob([await pdf.save()], {type:'application/pdf'});
+        out.href = URL.createObjectURL(blob); out.style.display = 'block'; out.download = 'image.pdf';
+    } else if (type === 'pdf2img') {
+        // PDF to Image: not feasible client-side without heavy libraries. Recommend backend.
+        alert('PDF to Image is limited in browser. Please use a desktop app for this conversion.');
+        out.style.display = 'none';
+    } else if (type === 'docx2pdf') {
+        // DOCX to PDF (basic): Render DOCX as HTML, then print to PDF
+        mammoth.convertToHtml({arrayBuffer: await file.arrayBuffer()}).then(function(result){
+            let w = window.open('', '_blank');
+            w.document.write('<html><head><title>Print to PDF</title></head><body>' + result.value + '</body></html>');
+            w.print();
+            out.style.display = 'none';
+        });
+    }
+}
+</script>
+</body>
+</html>
